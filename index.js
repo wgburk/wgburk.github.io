@@ -148,9 +148,9 @@ window.onload = function(){
         touchX = touch.screenX;
         touchY = touch.screenY;
         //Record
-        var text = 'touchX: ' + (touch.screenX-touchX) + '\ntouchY: ' + (touch.screenY-touchY) + '\nlon: ' + lon + '\nlat: ' + lat;
-        var info = document.getElementsByClassName('touchInfo')[0];
-        info.innerText = text;
+        //var text = 'touchX: ' + (touch.screenX-touchX) + '\ntouchY: ' + (touch.screenY-touchY) + '\nlon: ' + lon + '\nlat: ' + lat;
+        //var info = document.getElementsByClassName('touchInfo')[0];
+        //info.innerText = text;
     }
     function handleOrientation( e ) {
         e.preventDefault();
