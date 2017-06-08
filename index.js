@@ -77,8 +77,10 @@ window.onload = function(){
         document.addEventListener( 'touchstart', onDocumentTouchStart, false );
         document.addEventListener( 'touchmove', onDocumentTouchMove, false );
         window.addEventListener( 'resize', onWindowResize, false );
-
-        window.addEventListener( 'deviceorientation', handleOrientation, false);
+        //设备物理方向
+        //window.addEventListener('deviceorientation', handleOrientation, false);
+        //设备重力加速度
+        //window.addEventListener('devicemotion', handleMotion, false);
     }
 
     function animate() {
@@ -148,27 +150,82 @@ window.onload = function(){
         touchX = touch.screenX;
         touchY = touch.screenY;
         //Record
-        //var text = 'touchX: ' + (touch.screenX-touchX) + '\ntouchY: ' + (touch.screenY-touchY) + '\nlon: ' + lon + '\nlat: ' + lat;
-        //var info = document.getElementsByClassName('touchInfo')[0];
-        //info.innerText = text;
+        var text = 'touchX: ' + (touch.screenX-touchX) + '\ntouchY: ' + (touch.screenY-touchY) + '\nlon: ' + lon + '\nlat: ' + lat;
+        var info = document.getElementsByClassName('touchInfo')[0];
+        info.innerText = text;
     }
-    function handleOrientation( e ) {
-        e.preventDefault();
 
-        var x = Math.round(e.beta - 60),
-            y = Math.round(e.gamma),
-            z = Math.round(e.alpha)
-            ;
+    var orienter = new Orienter();
+    var lastUpdate = 0,
+        x,
+        y,
+        z,
+        lastX,
+        lastY,
+        lastZ
+        ;
+    function handleOrientation( e ) {
+        //e.preventDefault();
+
+        //var curTime = new Date().getTime();
+        //if(curTime - lastUpdate > 0){
+        //    lastUpdate = curTime;
+        //    x = Math.round(e.beta);
+        //    y = Math.round(e.gamma);
+        //    z = Math.round(e.alpha);
+        //
+        //    //处理角度问题
+        //    if(y == 0){
+        //        lastY = 'c';
+        //    }
+        //    if(y == 90 && lastY != 'r'){
+        //        lastY = 'l';
+        //    }
+        //    if(y == -90 && lastY != 'l'){
+        //        lastY = 'r';
+        //    }
+        //    //Y轴转动
+        //    if(y != 90 || y != -90){
+        //        lon = -y;
+        //    }
+        //    //Y轴超过90°或-90°继续旋转
+        //    if(y < 0 && lastY == 'l'){
+        //        lon = (-91) + (-(y + 90));
+        //        //x = x + 180;
+        //    }
+        //    if(y > 0 && lastY == 'r'){
+        //        lon = 91 + (90 - y);
+        //        //x = x - 180;
+        //    }
+        //    //X轴转动
+        //    //lat = x - 90;
+        //}
         //console.log('absolute: ' + e.absolute);
         //console.log('alpha: ' + e.alpha);           //z轴上的旋转角度，0~360
         //console.log('beta: ' + e.beta);             //x轴上的旋转角度，-180~180
         //console.log('gamma: ' + e.gamma);           //y轴上的旋转角度，-90~90
-        lon -= (y * 0.05);
-        lat += (x * 0.05);
+        //lon = (y * 0.05);
+        //lat = (x * 0.05);
         //phi += z * 0.05;
+
         //Record
-        var text = 'x: ' + x + '\ny: ' + y + '\nlon: ' + lon + '\nlat: ' + lat;
-        var info = document.getElementsByClassName('rorateInfo')[0];
-        info.innerText = text;
+        //var text = 'x: ' + x + '\ny: ' + y + '\nlon: ' + lon + '\nlat: ' + lat;
+        //var info = document.getElementsByClassName('rorateInfo')[0];
+        //info.innerText = text;
     }
+    function handleMotion(event){
+        //捕捉重力加速度
+        var acceleration = event.accelerationIncludingGravity;
+
+        //打印加速数据
+        var rawAcceleration = "[" +  acceleration.x + ", " +Math.round(acceleration.y) + ", " + Math.round(acceleration.z) + "]";
+        var info = document.getElementsByClassName('touchInfo')[0];
+        info.innerText = rawAcceleration;
+    }
+
+    orienter.onOrient = function(obj){
+        lon = -obj.lon;
+        lat = obj.lat;
+    };
+    orienter.init();
 };
