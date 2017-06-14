@@ -11,7 +11,10 @@ window.onload = function(){
 
     var touchX, touchY;
 
-    var currentX, currentY;
+    var lock = false;
+
+    var onOrientLon = 0, onOrientLat = 0;
+    var oldLon = 90, oldLat = 0;
 
     init();
     animate();
@@ -76,6 +79,7 @@ window.onload = function(){
         document.addEventListener( 'wheel', onDocumentMouseWheel, false );
         document.addEventListener( 'touchstart', onDocumentTouchStart, false );
         document.addEventListener( 'touchmove', onDocumentTouchMove, false );
+        document.addEventListener( 'touchend', onDocumentTouchEnd, false );
         window.addEventListener( 'resize', onWindowResize, false );
         //设备物理方向
         //window.addEventListener('deviceorientation', handleOrientation, false);
@@ -141,6 +145,8 @@ window.onload = function(){
         var touch = event.touches[ 0 ];
         touchX = touch.screenX;
         touchY = touch.screenY;
+        //触摸时锁定陀螺仪
+        lock = true;
     }
     function onDocumentTouchMove( event ) {
         event.preventDefault();
@@ -154,6 +160,13 @@ window.onload = function(){
         var info = document.getElementsByClassName('touchInfo')[0];
         info.innerText = text;
     }
+    function onDocumentTouchEnd(event){
+        event.preventDefault();
+        //记录触摸移动后的位置
+        oldLon = lon;
+        oldLat = lat;
+        lock = false;
+    }
 
     var orienter = new Orienter();
     var lastUpdate = 0,
@@ -165,7 +178,7 @@ window.onload = function(){
         lastZ
         ;
     function handleOrientation( e ) {
-        //e.preventDefault();
+        e.preventDefault();
 
         //var curTime = new Date().getTime();
         //if(curTime - lastUpdate > 0){
@@ -224,8 +237,22 @@ window.onload = function(){
     }
 
     orienter.onOrient = function(obj){
-        lon = -obj.lon;
-        lat = obj.lat;
+        console.log(JSON.stringify(this));
+
+        if(!lock){
+            //lon = -obj.lon;
+            //lat = obj.lat;
+            lon = oldLon - (obj.lon - onOrientLon);
+            lat = oldLat + (obj.lat - onOrientLat);
+        }else{
+            //记录当前陀螺仪位置
+            onOrientLon = obj.lon;
+            onOrientLat = obj.lat;
+        }
+        //Record
+        var text = 'lon: ' + obj.lon + '\nlat: ' + obj.lat;
+        var info = document.getElementsByClassName('rorateInfo')[0];
+        info.innerText = text;
     };
     orienter.init();
 };
