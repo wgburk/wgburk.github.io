@@ -156,9 +156,9 @@ window.onload = function(){
         touchX = touch.screenX;
         touchY = touch.screenY;
         //Record
-        var text = 'touchX: ' + (touch.screenX-touchX) + '\ntouchY: ' + (touch.screenY-touchY) + '\nlon: ' + lon + '\nlat: ' + lat;
-        var info = document.getElementsByClassName('touchInfo')[0];
-        info.innerText = text;
+        //var text = 'touchX: ' + (touch.screenX-touchX) + '\ntouchY: ' + (touch.screenY-touchY) + '\nlon: ' + lon + '\nlat: ' + lat;
+        //var info = document.getElementsByClassName('touchInfo')[0];
+        //info.innerText = text;
     }
     function onDocumentTouchEnd(event){
         event.preventDefault();
@@ -250,9 +250,9 @@ window.onload = function(){
             onOrientLat = obj.lat;
         }
         //Record
-        var text = 'lon: ' + obj.lon + '\nlat: ' + obj.lat;
-        var info = document.getElementsByClassName('rorateInfo')[0];
-        info.innerText = text;
+        //var text = 'lon: ' + obj.lon + '\nlat: ' + obj.lat;
+        //var info = document.getElementsByClassName('rorateInfo')[0];
+        //info.innerText = text;
     };
     orienter.init();
 };
